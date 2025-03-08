@@ -2,7 +2,14 @@ require "application_system_test_case"
 
 class QuotesTest < ApplicationSystemTestCase
   setup do
-    @quote = quotes(:first)
+    @quote = Quote.ordered.first
+  end
+
+  test "Showing a quote" do
+    visit quotes_path
+
+    click_link @quote.name
+    assert_selector "h1", text: @quote.name
   end
 
   test "Creating a new quote" do
@@ -14,10 +21,10 @@ class QuotesTest < ApplicationSystemTestCase
     # When we click on New Quote we expect to 
     # land on a page with the title "New Quote"
     click_on "New Quote"
-    assert_selector "h1", text: "New Quote"
+    fill_in "Name", with: "Capybara quote"
 
     # When we fill in the quote text and click "Create Quote"
-    fill_in "Name", with: "Capybara quote"
+    assert_selector "h1", text: "Quotes"
     click_on "Create quote"
 
     # we expect to be directed to the index page and
@@ -26,21 +33,14 @@ class QuotesTest < ApplicationSystemTestCase
     assert_text "Capybara quote"
   end
 
-  test "Showing a quote" do
-    visit quotes_path
-
-    click_link @quote.name
-    assert_selector "h1", text: @quote.name
-  end
-
   test "Updating a quote" do
     visit quotes_path
     assert_selector "h1", text: "Quotes"
 
     click_on "Edit", match: :first
-    assert_selector "h1", text: "Edit Quote"
-
     fill_in "Name", with: "Updated Quote"
+
+    assert_selector "h1", text: "Quotes"
     click_on "Update quote"
 
     assert_selector "h1", text: "Quotes"
