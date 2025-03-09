@@ -5,6 +5,8 @@ class Quote < ApplicationRecord
 
   broadcasts_to ->(quote) { "quotes" }, inserts_by: :prepend
 
+  belongs_to :company
+
   validates :name, presence: true
 
   scope :ordered, -> { order(id: :desc) }
